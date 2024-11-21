@@ -1,5 +1,4 @@
 import React from "react";
-// import Tilt from "react-tilt";
 import Tilt from 'react-parallax-tilt';
 import { motion } from "framer-motion";
 import { fadeIn } from "../utils/motion";
