@@ -1,94 +1,129 @@
-/* Full-screen container for centering the join room box */
+/* Main container for the Create Auction Room */
 .room_container {
-    width: 100%;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #001f3f;
-    background-size: cover;
-    background-position: center;
-  }
-  
-  /* Join Room container with gradient styling */
-  .join-room-container {
-    width: 400px;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.1), 0px 8px 20px rgba(0, 0, 0, 0.2);
-    background: linear-gradient(to right, rgba(22, 17, 48, 0.6), rgba(22, 17, 48, 0.2));
-    border-width: 5px;
-    
-    border-style: solid;
-    border-image: linear-gradient(
-      to bottom,
-      rgba(0, 128, 0, 0.8) 0%,
-      rgba(0, 128, 0, 0.8) 20%,
-      purple 100%
-    ) 1;
-    text-align: center;
-    font-family: Arial, sans-serif;
-    color: white;
-  }
-  
-  .join-room-container h2 {
-    margin-bottom: 20px;
-    color: #f5e8c7; /* Light gold/cream */
-  }
-  
-  .join-room-form {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .form-group {
-    margin-bottom: 15px;
-    text-align: left;
-  }
-  
-  .form-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: #dfe4e9; /* Light text color */
-  }
-  
-  .form-group input {
-    width: 100%;
-    padding: 10px;
-    font-size: 14px;
-    border: 2px solid #001f3f; /* Dark blue */
-    border-radius: 5px;
-    background-color: rgba(22, 16, 53, 0.6);
-    color: #dee5ed; /* Light text */
-    outline: none;
-    transition: border-color 0.3s;
-  }
-  
-  .form-group input:focus {
-    border-color: #007bff; /* Bright blue */
-  }
-  
-  .join-room-button {
-    padding: 12px 20px;
-    font-size: 16px;
-    color: #001f3f; /* Dark blue */
-    background-color: #f5e8c7; /* Light gold/cream */
-    border: none;
-    border-radius: 25px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin-top: 10px;
-  }
-  
-  .join-room-button:hover {
-    background-color: white;
-    color: #001f3f; /* Dark blue */
-  }
-  
-  .error-message {
-    margin-top: 15px;
-    color: red;
-    font-size: 14px;
-  }
-  
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #001f3f;
+  background-size: cover;
+  background-position: center;
+}
+
+/* Form container with gradient color */
+.create_room_container {
+  width: 1200px; /* Increased width for more space */
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.1), 0px 8px 20px rgba(0, 0, 0, 0.2);
+  background: linear-gradient(to right, rgba(22, 17, 48, 0.6), rgba(22, 17, 48, 0.2));
+  padding: 20px;
+  border-width: 5px; /* Width of the border */
+  border-style: solid;
+  border-image: linear-gradient(
+    to bottom,
+    rgba(0, 128, 0, 0.8) 0%,    /* Dark green at the top */
+    rgba(0, 128, 0, 0.8) 20%,   /* Dark green for left and right sides */
+    purple 100%                 /* Purple at the bottom */
+  ) 1;
+}
+
+/* Header styling */
+.header {
+  font-size: 28px;
+  color: white;
+  margin-bottom: 20px; /* Space below header */
+}
+
+/* Input groups for two containers in one line */
+.input_group {
+  display: flex; /* Use flexbox to align items */
+  justify-content: space-between; /* Space between the two inputs */
+  width: 100%; /* Full width for the input group */
+  margin-bottom: 20px; /* Space below each input group */
+}
+
+/* Input fields */
+.input_container {
+  width: 48%; /* Adjust width to fit two in one line */
+  position: relative;
+}
+
+.input {
+  outline: none;
+  border: 2px solid #001f3f; /* Dark blue */
+  width: 100%; /* Make input fill container */
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 16px;
+  color: #dee5ed;
+  background-color:rgba(22, 16, 53, 0.6) ;
+}
+
+/* Add Product Section */
+.product_input_container {
+  display: flex; /* Use flexbox to align elements */
+  align-items: center; /* Center items vertically */
+  justify-content: center; /* Center items horizontally */
+  width: 100%; /* Full width for the product input container */
+  margin-top: 20px; /* Space above the add product section */
+}
+
+.add_product_btn {
+  margin-left: 10px; /* Space between input and button */
+  padding: 10px 15px;
+  background-color: rgba(22, 16, 53, 0.6); /* Light gold/cream */
+  color: #dfe4e9; /* Dark blue */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 20px;
+}
+
+.add_product_btn:hover {
+  background-color: white;
+  color: #001f3f;
+}
+
+/* Product List */
+.product_list {
+  margin-top: 20px; /* Space above product list */
+  width: 100%;
+}
+
+.product_list ul {
+  list-style-type: none; /* Remove bullets */
+  padding: 0; /* Remove padding */
+}
+
+.product_list li {
+  margin-bottom: 5px; /* Space between list items */
+}
+
+/* Submit Button */
+.submit_btn_container {
+  display: flex;
+  justify-content: center; /* Center the submit button */
+  width: 100%; /* Full width for the container */
+}
+
+.submit_btn {
+  padding: 12px 20px;
+  background-color: #f5e8c7; /* Light gold/cream */
+  color: #001f3f; /* Dark blue */
+  border: none;
+  border-radius: 25px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 20px; /* Space above the button */
+}
+
+.submit_btn:hover {
+  background-color: white;
+  color: #001f3f;
+}
