@@ -9,7 +9,6 @@ const ServiceCard = ({ index, title, icon }) => {
   const navigate = useNavigate(); 
 
   const handleButtonClick = () => {
-    // navigate(`/Login`); 
     navigate(`/services/${title.replace(/\s+/g, '-').toLowerCase()}`); 
   };
 
@@ -37,13 +36,6 @@ const ServiceCard = ({ index, title, icon }) => {
             {title}
           </h3>
 
-          {/* Button to redirect to a new page */}
-          {/* <button 
-            className='mt-4 bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition'
-            onClick={handleButtonClick}
-          >
-            View Details
-          </button> */}
           <button
   className="mt-4 bg-transparent  border border-blue-500 py-2 px-4 text-lg rounded-lg hover:bg-[#4b2b8f] hover:text-white transition"
   onClick={handleButtonClick}
