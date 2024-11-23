@@ -109,3 +109,5 @@ const ServiceCard = ({ index, title, icon }) => {
 };
 
 export default ServiceCard;
+
+
