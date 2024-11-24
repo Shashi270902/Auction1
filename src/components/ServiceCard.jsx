@@ -7,11 +7,9 @@ import { Link } from "react-router-dom";
 
 const ServiceCard = ({ index, title, icon }) => {
   const navigate = useNavigate(); 
-
   const handleButtonClick = () => {
     navigate(`/services/${title.replace(/\s+/g, '-').toLowerCase()}`); 
   };
-
   return (
     <Tilt className='xs:w-[250px] w-full'>
       <motion.div
@@ -41,10 +39,7 @@ const ServiceCard = ({ index, title, icon }) => {
   onClick={handleButtonClick}
 >
   View Details
-</button>
-
-
-          
+</button>       
         </div>
       </motion.div>
     </Tilt>
