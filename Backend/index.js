@@ -33,66 +33,31 @@ app.get('/', (req, res) => {
 
 // WebSocket Connection Handling
 wss.on('connection', (ws) => {
-    console.log('New WebSocket client connected');
-  
-    ws.on('message', async (message) => {
-      try {
-        const data = JSON.parse(message);
-  
-        if (data.type === 'newBid') {
-          // Update highest bid and bidder in the database
-          // Ensure the filter is an object, with roomId as a key
-          
-          await AuctionRoom.findOneAndUpdate(
-            { roomId: data.roomId },  // Proper filter format
-            {
-              highestBid: data.bidAmount,
-              highestBidder: data.bidder,
-            }
-          );
-  
-          // Broadcast the updated bid
-          broadcast({
-            type: 'newBid',
-            roomId: data.roomId,
-            bidAmount: data.bidAmount,
-            bidder: data.bidder,
-          });
-        } else if (data.type === 'newUser') {
-            console.log(data);
-          // Add new user to joinedUsers in the database
-          const room = await AuctionRoom.findOne({ roomId: data.roomId }); // Ensure the filter is an object
-          if (room && !room.joinedUsers.includes(data.username)) {
-            room.joinedUsers.push(data.username);
-            await room.save();
-  
-            // Broadcast notification for new user joining
-            broadcast({
-              type: 'newUser',
-              roomId: data.roomId,
-              username: data.username,
-            });
-          }
-        }
-      } catch (error) {
-        console.error('Error processing WebSocket message:', error.message);
+  console.log('New WebSocket client connected');
+
+  ws.on('message', (message) => {
+    const data = JSON.parse(message);
+    console.log('Received:', data);
+
+    // Broadcast to all connected clients
+    wss.clients.forEach((client) => {
+      if (client !== ws && client.readyState === WebSocket.OPEN) {
+        // Make sure to forward the roomCode with the message
+        client.send(JSON.stringify({
+          type: data.type,
+          roomCode: data.roomCode,
+          bidAmount: data.bidAmount,
+          userName: data.userName,
+          winner: data.winner
+        }));
       }
-    });
-  
-    ws.on('close', () => {
-      console.log('WebSocket client disconnected');
     });
   });
-  
-  // Broadcast function
-  const broadcast = (data) => {
-    wss.clients.forEach((client) => {
-      if (client.readyState === WebSocket.OPEN) {
-        client.send(JSON.stringify(data));
-      }
-    });
-  };
-  
+
+  ws.on('close', () => {
+    console.log('Client disconnected');
+  });
+});
 
 // Global error handling
 app.use((err, req, res, next) => {

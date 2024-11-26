@@ -55,7 +55,7 @@ const App = () => {
         <Route path="/create-room" element={<CreateRoom />} /> 
 
         {/* Room page route */}
-        <Route path="/room/:roomId" element={<Room />} /> 
+        <Route path="/room/:roomCode" element={<Room />} /> 
 
         {/* Join Room page */}
         <Route path="/join-room" element={<JoinRoom />} />

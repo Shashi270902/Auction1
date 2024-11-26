@@ -1,5 +1,3 @@
-
-
 /* Main container with animated background */
 .room_container {
   width: 100%;
@@ -7,7 +5,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-size: 400% 400%; /* For smooth animation */
+  background-size: 400% 400%;
   background-image: linear-gradient(
     45deg,
     rgba(0, 128, 128, 0.8),
@@ -15,22 +13,35 @@
     rgba(128, 0, 128, 0.8),
     rgba(0, 0, 128, 0.8)
   );
-  animation: animateBackground 10s ease infinite;
+  animation: 
+    animateBackground 20s ease infinite,
+    moveLeftRight 15s ease-in-out infinite alternate;
 }
 
 /* Background animation keyframes */
 @keyframes animateBackground {
-  0% {
-    background-position: 0% 50%;
+  0%, 100% {
+    background-position: 0% 0%;
+  }
+  25% {
+    background-position: 100% 25%;
   }
   50% {
-    background-position: 100% 50%;
+    background-position: 50% 100%;
   }
-  100% {
-    background-position: 0% 50%;
+  75% {
+    background-position: 0% 75%;
   }
 }
 
+@keyframes moveLeftRight {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
 
 /* Form container with gradient color */
 .create_room_container {
@@ -51,6 +62,12 @@
     rgba(0, 128, 0, 0.8) 20%,   /* Dark green for left and right sides */
     purple 100%                 /* Purple at the bottom */
   ) 1;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.create_room_container:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 8px 20px rgba(255, 255, 255, 0.2), 0px 12px 28px rgba(0, 0, 0, 0.3);
 }
 
 /* Header styling */
@@ -58,6 +75,8 @@
   font-size: 28px;
   color: white;
   margin-bottom: 20px; /* Space below header */
+  animation: pulse 2s infinite;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
 }
 
 /* Input groups for two containers in one line */
@@ -66,23 +85,161 @@
   justify-content: space-between; /* Space between the two inputs */
   width: 100%; /* Full width for the input group */
   margin-bottom: 20px; /* Space below each input group */
+  gap: 20px; /* Add gap between inputs */
 }
 
-/* Input fields */
+.input_group .input_container {
+  width: 48%; /* Keep the 48% width for input containers within input groups */
+}
+
+/* Input container styling */
 .input_container {
-  width: 48%; /* Adjust width to fit two in one line */
+  width: 100%; /* Change back to full width */
   position: relative;
+  perspective: 1000px;
+  z-index: 1;
 }
 
+/* Label styling */
+.input_container label {
+  display: flex;
+  flex-direction: column;
+  color: #dee5ed;
+  margin-bottom: 5px;
+  font-size: 14px;
+  width: 100%;
+}
+
+/* Input styling */
 .input {
   outline: none;
-  border: 2px solid #001f3f; /* Dark blue */
-  width: 100%; /* Make input fill container */
+  border: 2px solid #001f3f;
+  width: 100%;
   padding: 10px;
   border-radius: 5px;
   font-size: 16px;
   color: #dee5ed;
-  background-color:rgba(22, 16, 53, 0.6) ;
+  background-color: rgba(22, 16, 53, 0.6);
+  transition: all 0.3s ease;
+  position: relative; /* Add this */
+  z-index: 2; /* Add this to ensure inputs are above animations */
+}
+
+/* Fix the hover effect container */
+.input_container::before,
+.input_container::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 0;
+  background: transparent;
+  border: 2px solid transparent;
+  border-radius: 5px;
+  pointer-events: none; /* Add this to prevent interference with input */
+  z-index: 1; /* Add this to place below input */
+}
+
+/* Adjust the hover animations to be behind the input */
+.input_container:hover::before {
+  width: calc(100% + 4px);
+  height: calc(100% + 4px);
+  border-top-color: white;
+  border-right-color: white;
+  transition: width 0.3s ease, height 0.3s ease 0.3s;
+  pointer-events: none;
+}
+
+.input_container:hover::after {
+  width: calc(100% + 4px);
+  height: calc(100% + 4px);
+  border-bottom-color: white;
+  border-left-color: white;
+  transition: width 0.3s ease, height 0.3s ease 0.3s;
+  pointer-events: none;
+}
+
+/* Ensure the shine effect doesn't interfere */
+.input_container:hover::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  animation: shine 1.5s ease-in-out infinite;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Make sure select elements are styled consistently */
+.input_container select.input {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 1em;
+  padding-right: 40px;
+}
+
+/* Ensure datetime-local input is styled properly */
+.input[type="datetime-local"] {
+  color-scheme: dark; /* For better date picker styling in dark mode */
+}
+
+/* Add focus styles that don't interfere with input */
+.input:focus {
+  outline: none;
+  transform: translateY(-2px);
+  background: rgba(22, 16, 53, 0.8);
+  box-shadow: 
+    0 5px 15px rgba(255, 255, 255, 0.2),
+    0 10px 30px rgba(0, 128, 0, 0.3);
+  border-color: rgba(0, 128, 0, 0.8);
+  z-index: 3; /* Ensure focused input is on top */
+}
+
+/* Add a new shine effect */
+@keyframes shine {
+  0% {
+    left: -100%;
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    left: 100%;
+    opacity: 0;
+  }
+}
+
+.input_container {
+  overflow: hidden;
+}
+
+.input_container:hover::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  animation: shine 1.5s ease-in-out infinite;
+  z-index: 1;
 }
 
 /* Add Product Section */
@@ -104,6 +261,30 @@
   cursor: pointer;
   transition: background-color 0.3s ease;
   margin-top: 20px;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.add_product_btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: 0.5s;
+  z-index: -1;
+}
+
+.add_product_btn:hover::before {
+  left: 100%;
 }
 
 .add_product_btn:hover {
@@ -124,6 +305,17 @@
 
 .product_list li {
   margin-bottom: 5px; /* Space between list items */
+  padding: 10px;
+  background: rgba(22, 16, 53, 0.6);
+  border-radius: 5px;
+  transition: all 0.3s ease;
+  transform-origin: left;
+}
+
+.product_list li:hover {
+  transform: scale(1.02);
+  background: rgba(22, 16, 53, 0.8);
+  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
 }
 
 /* Submit Button */
@@ -143,9 +335,107 @@
   cursor: pointer;
   transition: background-color 0.3s ease;
   margin-top: 20px; /* Space above the button */
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.submit_btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transform: translateX(-100%);
+  transition: 0.6s;
+  z-index: -1;
+}
+
+.submit_btn:hover::before {
+  transform: translateX(100%);
 }
 
 .submit_btn:hover {
-  background-color: white;
-  color: #001f3f;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Add animation for product list items */
+.product_list li {
+  animation: slideIn 0.3s ease forwards;
+}
+
+/* Add a smooth entrance animation for new products */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Add pulse animation for the header */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.product_item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px;
+  margin-bottom: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 5px;
+  color: #dfe4e9;
+}
+
+.delete_product_btn {
+  background: none;
+  border: none;
+  color: #ff4444;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+.input {
+  outline: none;
+  border: 2px solid #001f3f; /* Dark blue */
+  width: 500px; /* Increase the width to your desired value */
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 16px;
+  color: #dee5ed;
+  background-color: rgba(22, 16, 53, 0.6);
+  transition: all 0.3s ease;
+  position: relative; /* Add this */
+  z-index: 2; /* Add this to ensure inputs are above animations */
+}
+.delete_product_btn:hover {
+  background-color: rgba(255, 68, 68, 0.2);
+  transform: scale(1.1);
 }

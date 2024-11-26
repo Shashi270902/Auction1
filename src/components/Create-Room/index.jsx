@@ -32,6 +32,7 @@ const CreateAuctionRoom = () => {
   }, []);
 
   const handleChange = (e) => {
+    console.log(e.target.name, e.target.value);
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -57,7 +58,9 @@ const CreateAuctionRoom = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true); // Set loading state to true before making the API call
+    setLoading(true);
+
+    console.log(formData, products);
 
     try {
       const response = await axios.post("http://localhost:8080/api/auction/create-room", {
@@ -67,27 +70,24 @@ const CreateAuctionRoom = () => {
 
       console.log("Response from backend:", response);
 
-      // Check if response contains the room ID
-      if (response && response.data && response.data.auctionRoom) {
-        const room_Id = response.data.room_Id;
-
-        if (room_Id) {
-          alert("Auction Room Created Successfully!");
-         
-          localStorage.removeItem("createAuctionRoomData"); // Clear form data on successful creation
-
-          navigate(`/room/${room_Id}`);
-        } else {
-          alert("Room ID not found in response!");
-        }
+      // Check if response contains the roomCode
+      if (response && response.data && response.data.roomCode) {
+        const roomCode = response.data.roomCode;
+        alert("Auction Room Created Successfully!");
+        
+        // Clear form data from localStorage
+        localStorage.removeItem("createAuctionRoomData");
+        
+        // Navigate to the room using the roomCode
+        navigate(`/room/${roomCode}`);
       } else {
-        alert("Failed to create auction room. Please try again.");
+        alert("Room Code not found in response. Please try again.");
       }
     } catch (error) {
       console.error("Error creating room:", error.response?.data?.message || error.message);
       alert("Error creating room. Please try again.");
     } finally {
-      setLoading(false); // Reset loading state after the request is completed
+      setLoading(false);
     }
   };
 

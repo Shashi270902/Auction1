@@ -1,17 +1,12 @@
 .container {
+    min-height: 100vh;
+    padding: 30px;
     background-size: cover;
     background-position: center;
-    min-height: 100vh;
     color: #fff;
     position: relative;
-    padding: 30px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
     animation: gradientBG 15s ease infinite;
-    background-image: linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);
-    background-size: 400% 400%;
+    background: rgba(70, 20, 135, 0.7);
 }
 
 @keyframes gradientBG {
@@ -20,263 +15,189 @@
     100% { background-position: 0% 50%; }
 }
 
-.tagline {
-    position: absolute;
-    top: 20px;
-    font-size: 36px;
-    font-family: "Courier New", Courier, monospace;
-    color: #fff;
-    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
-    animation: fadeInDown 1.5s ease-in-out, float 3s ease-in-out infinite;
-}
-
-@keyframes fadeInDown {
-    0% { opacity: 0; transform: translateY(-20px); }
-    100% { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes float {
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
-    100% { transform: translateY(0px); }
-}
-
-.roomInfo {
-    position: absolute;
-    top: 80px;
-    left: 50px;
-    font-size: 24px;
-    font-family: "Courier New", Courier, monospace;
-    color: #fff;
-    transition: transform 0.3s;
-    animation: slideInLeft 1s ease-out;
-}
-
-@keyframes slideInLeft {
-    0% { opacity: 0; transform: translateX(-50px); }
-    100% { opacity: 1; transform: translateX(0); }
-}
-
-.roomInfo:hover {
-    transform: scale(1.05) rotate(2deg);
-}
-
-.timer {
-    position: absolute;
-    bottom: 100px;
-    left: 50px;
-    font-size: 30px;
-    color: #fff;
-    transition: transform 0.3s;
-    animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
-}
-
-.timer:hover {
-    transform: scale(1.1);
-}
-
-.bidSection {
-    position: absolute;
-    bottom: 100px;
-    left: 50%;
-    transform: translateX(-50%);
+.title {
     text-align: center;
-    font-size: 30px;
-    transition: transform 0.3s;
-    animation: fadeIn 1s ease-out;
-}
-
-@keyframes fadeIn {
-    0% { opacity: 0; }
-    100% { opacity: 1; }
-}
-
-.bidSection input {
-    padding: 10px;
-    font-size: 18px;
-    text-align: center;
-    width: 200px;
-    margin-top: 10px;
-    transition: all 0.3s ease;
-}
-
-.bidSection input:focus {
-    transform: scale(1.05);
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-}
-
-.bidSection button {
-    padding: 10px 20px;
-    font-size: 18px;
-    background-color: #4e73df;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-    margin-top: 10px;
-    transition: all 0.3s ease;
-}
-
-.bidSection button:hover {
-    background-color: #375a7f;
-    transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-}
-
-.bidSection button:active {
-    transform: translateY(-1px);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    font-size: 28px;
+    color: white;
+    margin-bottom: 30px;
 }
 
 .productBox {
-    width: 1000px;
-    height: 400px;
-    background-color: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    color: #000;
-    font-family: Arial, sans-serif;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
-    transition: all 0.5s ease;
-    animation: fadeInUp 1s ease-out;
-}
-
-@keyframes fadeInUp {
-    0% { opacity: 0; transform: translateY(20px); }
-    100% { opacity: 1; transform: translateY(0); }
-}
-
-.productBox:hover {
-    transform: scale(1.02) rotate(1deg);
-    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.4);
-}
-
-.joinedUsers {
-    position: absolute;
-    right: 100px;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(5px);
-    padding: 15px;
+     background: rgba(21, 16, 48, 0.65); ;
     border-radius: 8px;
-    color: #fff;
-    text-align: center;
-    transition: all 0.3s ease;
-    animation: slideInRight 1s ease-out;
+    padding: 25px;
+    box-shadow: 0 2px 10px  rgba(0, 0, 0, 0.2);
+    margin: 0 auto;
+    max-width: 1200px;
 }
-
-@keyframes slideInRight {
-    0% { opacity: 0; transform: translate(50px, -50%); }
-    100% { opacity: 1; transform: translate(0, -50%); }
-}
-
-.joinedUsers:hover {
-    transform: translateY(-50%) scale(1.05);
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
-}
-
-.auctionEnded {
-    font-size: 24px;
-    color: #4CAF50;
-    font-weight: bold;
-    margin-top: 20px;
-    text-align: center;
-    animation: bounceIn 0.8s ease-out;
-}
-
-@keyframes bounceIn {
-    0% { opacity: 0; transform: scale(0.3); }
-    50% { opacity: 1; transform: scale(1.05); }
-    70% { transform: scale(0.9); }
-    100% { transform: scale(1); }
+.topSection {
+    display: flex;
+    gap: 40px;
+    margin-bottom: 30px;
 }
 
 .imageContainer {
-    flex: 0 0 200px;
-    height: 300px;
-    width: 300px;
-    overflow: hidden;
+    width: 350px;
+    height: 350px;
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
     border-radius: 8px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: all 0.3s ease;
-}
-
-.imageContainer:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    overflow: hidden;
 }
 
 .imageContainer img {
-    max-width: 100%;
-    max-height: 100%;
+    width: 100%;
+    height: 100%;
     object-fit: contain;
-    transition: all 0.3s ease;
-}
-
-.imageContainer:hover img {
-    transform: scale(1.1);
 }
 
 .productDetails {
     flex: 1;
+}
+
+.productTitle {
+    font-size: 28px;
+    font-weight: bold;
+    color: #fff;
+    margin-bottom: 15px;
+}
+
+.startingPrice {
+    font-size: 24px;
+    font-weight: bold;
+    color: #fff;
+    margin-bottom: 20px;
+}
+
+.description {
+    font-size: 16px;
+    color: #e9ecef;
+    line-height: 1.6;
+}
+
+.middleSection {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.timer {
+    font-size: 24px;
+    color: #fff;
+    font-weight: 500;
+}
+
+.highestBid {
+    font-size: 24px;
+    color: #fff;
+    font-weight: bold;
+}
+
+.biddingSection {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.biddingSection input {
+    flex: 1;
+    padding: 12px 15px;
+    border: 2px solid #ced4da;
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+.biddingSection button {
+    padding: 12px 25px;
+    background: #6c63ff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.biddingSection button:hover {
+    background: #5a52d5;
+}
+
+.bottomSection {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.joinedUsers {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 6px;
+    min-width: 200px;
+}
+
+.joinedUsers h4 {
+    color: #fff;
     font-size: 18px;
-    color: #000;
-    padding: 20px;
-    transition: all 0.3s ease;
+    margin-bottom: 10px;
 }
 
-.productDetails:hover {
-    background-color: rgba(255, 255, 255, 0.2);
-    border-radius: 8px;
+.usersList {
+    list-style: none;
+    padding: 0;
 }
 
-@media (max-width: 1200px) {
-    .productBox {
-        width: 90%;
-        height: auto;
-        flex-direction: column;
-        padding: 20px;
-    }
+.usersList li {
+    color: #e9ecef;
+    margin-bottom: 5px;
+}
 
-    .imageContainer {
-        margin-bottom: 20px;
-    }
+.highestBidder {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 6px;
+    text-align: right;
+    min-width: 200px;
+}
 
-    .joinedUsers {
-        position: static;
-        transform: none;
-        margin-top: 20px;
-        animation: fadeIn 1s ease-out;
-    }
+.endAuctionBtn {
+    display: block;
+    margin: 20px auto 0;
+    padding: 12px 30px;
+    background: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
 
-    .bidSection, .timer, .roomInfo {
-        position: static;
-        transform: none;
-        margin-top: 20px;
-        animation: fadeIn 1s ease-out;
-    }
+.endAuctionBtn:hover {
+    background: #c82333;
 }
 
 @media (max-width: 768px) {
-    .tagline {
-        font-size: 24px;
+    .topSection {
+        flex-direction: column;
     }
 
-    .bidSection input,
-    .bidSection button {
+    .imageContainer {
         width: 100%;
+        height: 250px;
+    }
+
+    .biddingSection {
+        flex-direction: column;
+    }
+
+    .bottomSection {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .joinedUsers, .highestBidder {
+        width: 100%;
+        text-align: left;
     }
 }

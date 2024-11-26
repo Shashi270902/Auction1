@@ -12,7 +12,7 @@
   
   /* Form container with gradient color */
   .create_room_container {
-    width: 1200px; /* Increased width for more space */
+    width: 100%; /* Increased width for more space */
     height: auto;
     display: flex;
     flex-direction: column;
@@ -180,14 +180,7 @@
     padding: 20px;
   }
 
-  
-  .flash_card_container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
-    padding: 20px;
-  }
+
   
   .flash_card {
     background: white;

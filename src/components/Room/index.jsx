@@ -158,73 +158,87 @@ const Room = () => {
   };
 
   return (
-    <div
-      className={styles.container}
-      style={{
-        backgroundImage: `url(${herobg})`,
-      }}
+    <div 
+        className={styles.container}
+        style={{
+            backgroundImage: `url(${herobg})`,
+        }}
     >
-      <div className={styles.tagline}>The Treasure Chase – Bid Your Way to the Top!</div>
-      <div className={styles.roomInfo}>
-        <h2>Room ID: {roomId}</h2>
-        <p>Password: {password}</p>
-      </div>
-
-      {/* Display product details if available */}
-      {product ? (
+        <h1 className={styles.title}>The Treasure Chase – Bid Your Way to the Top!</h1>
+        
         <div className={styles.productBox}>
-          <div className={styles.imageContainer}>
-            <img src={product.image} alt="Product" />
-          </div>
-          <div className={styles.productDetails}>
-            <h3>Title: {product.title}</h3>
-            <p>Description: {product.description}</p>
-            <p>Category: {product.category}</p>
-            <p>Starting Price: ${product.starting_price}</p>
-            {product.reserve_price && <p>Reserve Price: ${product.reserve_price}</p>}
-          </div>
+            <div className={styles.topSection}>
+                <div className={styles.imageContainer}>
+                    {product && <img src={product.image} alt="Product" />}
+                </div>
+                
+                <div className={styles.productDetails}>
+                    <h2 className={styles.productTitle}>{product?.title}</h2>
+                    <p className={styles.startingPrice}>Starting Price: ${product?.starting_price}</p>
+                    <p className={styles.description}>{product?.description}</p>
+                    {product?.category && <p>Category: {product.category}</p>}
+                    {product?.reserve_price && <p>Reserve Price: ${product.reserve_price}</p>}
+                </div>
+            </div>
+
+            <div className={styles.middleSection}>
+                <div className={styles.timer}>
+                    Time Left: {formatTime(timeLeft)}
+                </div>
+                <div className={styles.highestBid}>
+                    Current Highest Bid: ${highestBid}
+                </div>
+            </div>
+
+            <div className={styles.biddingSection}>
+                <input
+                    type="number"
+                    placeholder="Enter your bid amount"
+                    value={newBid}
+                    onChange={(e) => setNewBid(e.target.value)}
+                    disabled={auctionEnded}
+                />
+                <button 
+                    onClick={placeBid} 
+                    disabled={auctionEnded || !newBid}
+                >
+                    Place Bid
+                </button>
+            </div>
+
+            <div className={styles.bottomSection}>
+                <div className={styles.joinedUsers}>
+                    <h4>Joined Users</h4>
+                    <ul className={styles.usersList}>
+                        {joinedUsers.map((user, index) => (
+                            <li key={index}>{user}</li>
+                        ))}
+                    </ul>
+                </div>
+                
+                <div className={styles.highestBidder}>
+                    <h4>Highest Bidder</h4>
+                    <p>{highestBidder}</p>
+                </div>
+            </div>
+
+            <button 
+                className={styles.endAuctionBtn}
+                onClick={endAuction} 
+                disabled={auctionEnded}
+            >
+                End Auction
+            </button>
         </div>
-      ) : (
-        <div>Loading product data...</div>
-      )}
 
-      <div className={styles.timer}>
-        <p>Auction Room ends in: {formatTime(timeLeft)}</p>
-      </div>
-
-      <div className={styles.bidSection}>
-        <h3>Highest Bid: ${highestBid}</h3>
-        <p>Highest Bidder: {highestBidder}</p>
-        <input
-          type="text"
-          placeholder="Enter your bid"
-          value={newBid}
-          onChange={(e) => setNewBid(e.target.value)}
-          disabled={auctionEnded}
-        />
-        <button onClick={placeBid} disabled={auctionEnded || !newBid}>
-          Place Bid
-        </button>
-        <button onClick={endAuction} disabled={auctionEnded}>
-          End Auction
-        </button>
-      </div>
-
-      <div className={styles.joinedUsers}>
-        <h4>Joined Users</h4>
-        <ul>
-          {joinedUsers.map((user, index) => (
-            <li key={index}>{user}</li>
-          ))}
-        </ul>
-      </div>
-
-      {auctionEnded && winner && (
-        <div className={styles.auctionEnded}>
-          Auction Ended! Winner: {winner.name} with a bid of ${winner.bid}
-        </div>
-      )}
-      {auctionEnded && !winner && <div className={styles.auctionEnded}>No winner declared!</div>}
+        {auctionEnded && winner && (
+            <div className={styles.auctionEnded}>
+                Auction Ended! Winner: {winner.name} with a bid of ${winner.bid}
+            </div>
+        )}
+        {auctionEnded && !winner && (
+            <div className={styles.auctionEnded}>No winner declared!</div>
+        )}
     </div>
   );
 };
