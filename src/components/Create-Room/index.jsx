@@ -13,11 +13,13 @@ const CreateAuctionRoom = () => {
     minbid_increment: 1,
     start_time: "",
     room_password: "",
+    selectedProducts: [],
   });
 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false); // Loading state to prevent multiple submits
   const navigate = useNavigate();
+  const [availableProducts, setAvailableProducts] = useState([]);
 
   useEffect(() => {
     // Load products from localStorage
@@ -29,6 +31,18 @@ const CreateAuctionRoom = () => {
     if (savedFormData) {
       setFormData(savedFormData);
     }
+
+    // Fetch available products
+    const fetchProducts = async () => {
+      try {
+        const response = await axios.get("http://localhost:8080/api/products");
+        setAvailableProducts(response.data.filter(product => !product.auction_room));
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+
+    fetchProducts();
   }, []);
 
   const handleChange = (e) => {
@@ -54,6 +68,14 @@ const CreateAuctionRoom = () => {
 
     // Update state
     setProducts(updatedProducts);
+  };
+
+  const handleProductSelection = (e) => {
+    const selectedOptions = Array.from(e.target.selectedOptions, option => option.value);
+    setFormData(prev => ({
+      ...prev,
+      selectedProducts: selectedOptions
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -243,6 +265,29 @@ const CreateAuctionRoom = () => {
               </ul>
             </div>
           )}
+
+          {/* Select Products */}
+          <div className={styles.input_group}>
+            <div className={styles.input_container}>
+              <label>
+                Select Products:
+                <select
+                  multiple
+                  name="selectedProducts"
+                  value={formData.selectedProducts}
+                  onChange={handleProductSelection}
+                  required
+                  className={styles.input}
+                >
+                  {availableProducts.map(product => (
+                    <option key={product._id} value={product._id}>
+                      {product.title} - ${product.starting_price}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+          </div>
 
           {/* Create Room Button */}
           <div className={styles.submit_btn_container}>

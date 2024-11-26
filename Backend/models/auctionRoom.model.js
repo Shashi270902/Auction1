@@ -45,8 +45,8 @@ const auctionRoomSchema = new mongoose.Schema({
         unique: true,
     },
     winner: {
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'user',
+        type: String,
+        default: null
     },
     highestBid: {
         type: Number,
@@ -67,6 +67,15 @@ const auctionRoomSchema = new mongoose.Schema({
     auctionEnded: {
         type: Boolean,
         default: false
+    },
+    products: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Product',
+        required: true
+    }],
+    finalBid: {
+        type: Number,
+        default: 0
     },
 });
 

@@ -11,6 +11,7 @@ import Room from "./components/Room";
 import Services from "./components/ServiceCard";
 import JoinRoom from "./components/Join-Room";
 import CreateRoom from "./components/Create-Room";
+import Products from "./components/Products";
 
 const App = () => {
   const user = localStorage.getItem("token");
@@ -55,13 +56,15 @@ const App = () => {
         <Route path="/create-room" element={<CreateRoom />} /> 
 
         {/* Room page route */}
-        <Route path="/room/:roomCode" element={<Room />} /> 
+        <Route path="/room/:roomId" element={<Room />} /> 
 
         {/* Join Room page */}
         <Route path="/join-room" element={<JoinRoom />} />
 
         {/* Services Page */}
         <Route path="/services" element={<Services />} />
+
+        <Route path="/products" element={<Products />} />
       </Routes>
     </BrowserRouter>
   );

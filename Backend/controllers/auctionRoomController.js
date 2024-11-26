@@ -1,5 +1,6 @@
 const AuctionRoom = require('../models/auctionRoom.model');
 const crypto = require('crypto');
+const Product = require('../models/product.model');
 
 
 // Generate a unique room code
@@ -21,7 +22,7 @@ async function generateUniqueRoomCode() {
 exports.createAuctionRoom = async (req, res) => {
     console.log(req.body);
     try {
-        const { timelimit, ...otherData } = req.body;
+        const { timelimit, selectedProducts, ...otherData } = req.body;
         
         // Generate unique room code
         const roomCode = await generateUniqueRoomCode();
@@ -31,13 +32,24 @@ exports.createAuctionRoom = async (req, res) => {
         
         const room = new AuctionRoom({
             ...otherData,
-            roomCode,    // Add the generated room code
+            roomCode,
             timelimit,
             endTime,
+            products: selectedProducts, // Add selected products to the room
         });
         
         const newRoom = await room.save();
-        res.status(201).json(newRoom);
+
+        // Update each selected product with the auction room reference
+        await Product.updateMany(
+            { _id: { $in: selectedProducts } },
+            { auction_room: newRoom._id }
+        );
+
+        // Fetch the populated room data
+        const populatedRoom = await AuctionRoom.findById(newRoom._id).populate('products');
+        
+        res.status(201).json(populatedRoom);
     } catch (error) {
         console.log(error);
         res.status(400).json({ message: error.message });
@@ -47,7 +59,7 @@ exports.createAuctionRoom = async (req, res) => {
 // Get all auction rooms
 exports.getAuctionRooms = async (req, res) => {
     try {
-        const auctionRooms = await AuctionRoom.find();
+        const auctionRooms = await AuctionRoom.find().populate('products');
         res.status(200).json(auctionRooms);
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -56,9 +68,10 @@ exports.getAuctionRooms = async (req, res) => {
 
 // Get a single auction room by ID
 exports.getAuctionRoomById = async (req, res) => {
-    console.log("jbhgb",req.params);
     try {
-        const room = await AuctionRoom.findOne({ roomCode: req.params.roomCode });
+        const room = await AuctionRoom.findOne({ roomCode: req.params.roomCode })
+            .populate('products');
+            
         if (!room) {
             return res.status(404).json({ message: 'Room not found' });
         }
@@ -78,7 +91,12 @@ exports.getAuctionRoomById = async (req, res) => {
 // Update an auction room by ID
 exports.updateAuctionRoom = async (req, res) => {
     try {
-        const auctionRoom = await AuctionRoom.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+        const auctionRoom = await AuctionRoom.findByIdAndUpdate(
+            req.params.id, 
+            req.body, 
+            { new: true, runValidators: true }
+        ).populate('products');
+        
         if (!auctionRoom) {
             return res.status(404).json({ message: 'Auction room not found' });
         }
@@ -91,10 +109,20 @@ exports.updateAuctionRoom = async (req, res) => {
 // Delete an auction room by ID
 exports.deleteAuctionRoom = async (req, res) => {
     try {
-        const auctionRoom = await AuctionRoom.findByIdAndDelete(req.params.id);
+        const auctionRoom = await AuctionRoom.findById(req.params.id);
         if (!auctionRoom) {
             return res.status(404).json({ message: 'Auction room not found' });
         }
+
+        // Remove auction room reference from associated products
+        await Product.updateMany(
+            { auction_room: auctionRoom._id },
+            { $set: { auction_room: null } }
+        );
+
+        // Delete the auction room
+        await AuctionRoom.findByIdAndDelete(req.params.id);
+        
         res.status(200).json({ message: 'Auction room deleted successfully' });
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -150,11 +178,22 @@ exports.endAuction = async (req, res) => {
                 endTime: endTime
             },
             { new: true }
-        );
+        ).populate('products');
 
         if (!updatedRoom) {
             return res.status(404).json({ message: "Auction room not found." });
         }
+
+        // Update the status of all products in this auction
+        await Product.updateMany(
+            { auction_room: updatedRoom._id },
+            { 
+                $set: { 
+                    status: updatedRoom.highestBid > 0 ? 'sold' : 'unsold',
+                    current_bid: updatedRoom.highestBid
+                } 
+            }
+        );
 
         res.status(200).json({ 
             message: "Auction ended successfully.", 

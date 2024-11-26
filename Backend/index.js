@@ -9,6 +9,7 @@ const loginRouter = require('./routes/user.loginRoute');
 const auctionRoomRoutes = require('./routes/auctionRoomRoute');
 const productRoutes = require('./routes/productRoutes');
 const AuctionRoom = require('./models/auctionRoom.model'); // Add AuctionRoom model
+const Product = require('./models/product.model'); // Add Product model
 
 // Load environment variables
 dotenv.config();
@@ -31,31 +32,99 @@ app.get('/', (req, res) => {
   res.send("Welcome to the Auction System API!");
 });
 
+// Create a map to store room-specific connections
+const roomConnections = new Map();
+
 // WebSocket Connection Handling
 wss.on('connection', (ws) => {
-  console.log('New WebSocket client connected');
+  console.log('Client connected');
+  let clientRoomCode = null;
 
-  ws.on('message', (message) => {
-    const data = JSON.parse(message);
-    console.log('Received:', data);
+  ws.on('message', async (message) => {
+    try {
+      const data = JSON.parse(message);
+      console.log('Received:', data);
 
-    // Broadcast to all connected clients
-    wss.clients.forEach((client) => {
-      if (client !== ws && client.readyState === WebSocket.OPEN) {
-        // Make sure to forward the roomCode with the message
-        client.send(JSON.stringify({
-          type: data.type,
-          roomCode: data.roomCode,
-          bidAmount: data.bidAmount,
-          userName: data.userName,
-          winner: data.winner
-        }));
+      switch (data.type) {
+        case 'joinRoom':
+          clientRoomCode = data.roomCode;
+          if (!roomConnections.has(clientRoomCode)) {
+            roomConnections.set(clientRoomCode, new Set());
+          }
+          roomConnections.get(clientRoomCode).add(ws);
+
+          // Fetch current room state and send to the new client
+          const room = await AuctionRoom.findOne({ roomCode: clientRoomCode });
+          if (room) {
+            ws.send(JSON.stringify({
+              type: 'roomState',
+              roomCode: clientRoomCode,
+              highestBid: room.highestBid,
+              highestBidder: room.highestBidder,
+              timeLeft: Math.max(0, new Date(room.endTime) - new Date()),
+              joinedUsers: room.joinedUsers
+            }));
+          }
+          break;
+
+        case 'newBid':
+          // Update the database
+          await AuctionRoom.findOneAndUpdate(
+            { roomCode: data.roomCode },
+            { 
+              highestBid: data.bidAmount,
+              highestBidder: data.userName
+            }
+          );
+
+          // Broadcast to all clients in the same room
+          if (roomConnections.has(data.roomCode)) {
+            roomConnections.get(data.roomCode).forEach((client) => {
+              if (client.readyState === WebSocket.OPEN) {
+                client.send(JSON.stringify({
+                  type: 'bidUpdate',
+                  roomCode: data.roomCode,
+                  bidAmount: data.bidAmount,
+                  userName: data.userName,
+                  timestamp: new Date()
+                }));
+              }
+            });
+          }
+          break;
+
+        case 'syncTime':
+          if (roomConnections.has(data.roomCode)) {
+            const room = await AuctionRoom.findOne({ roomCode: data.roomCode });
+            if (room) {
+              roomConnections.get(data.roomCode).forEach((client) => {
+                if (client.readyState === WebSocket.OPEN) {
+                  client.send(JSON.stringify({
+                    type: 'timeSync',
+                    roomCode: data.roomCode,
+                    serverTime: new Date(),
+                    endTime: room.endTime,
+                    timeLeft: Math.max(0, new Date(room.endTime) - new Date())
+                  }));
+                }
+              });
+            }
+          }
+          break;
       }
-    });
+    } catch (error) {
+      console.error('WebSocket error:', error);
+    }
   });
 
   ws.on('close', () => {
     console.log('Client disconnected');
+    if (clientRoomCode && roomConnections.has(clientRoomCode)) {
+      roomConnections.get(clientRoomCode).delete(ws);
+      if (roomConnections.get(clientRoomCode).size === 0) {
+        roomConnections.delete(clientRoomCode);
+      }
+    }
   });
 });
 
