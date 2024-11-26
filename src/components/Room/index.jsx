@@ -17,7 +17,6 @@ const Room = () => {
   const [winner, setWinner] = useState(null); // New state to store winner details
   const timerRef = useRef(null);
   const wsRef = useRef(null);
-  const [serverTimeDiff, setServerTimeDiff] = useState(0);
 
   // Debugging roomId
   useEffect(() => {
@@ -28,7 +27,7 @@ const Room = () => {
     // Fetch product data from localStorage
     const products = JSON.parse(localStorage.getItem("products")) || [];
     const productData = products[0];
-    setProduct(productData);
+    // setProduct(productData);
     // console.log(roomId);
 
     // Check if roomId is available before setting up WebSocket
@@ -39,56 +38,60 @@ const Room = () => {
 
     // Set up WebSocket connection
     wsRef.current = new WebSocket("ws://localhost:8080");
-    
     wsRef.current.onopen = () => {
-      console.log("WebSocket connected");
-      // Join the room
-      wsRef.current.send(JSON.stringify({
-        type: 'joinRoom',
-        roomCode: roomId,
-        userName
-      }));
-
-      // Start time sync
-      setInterval(() => {
-        wsRef.current.send(JSON.stringify({
-          type: 'syncTime',
-          roomCode: roomId
-        }));
-      }, 5000); // Sync every 5 seconds
+      console.log("WebSocket connection established");
+      // Notify server of the new user joining
+      wsRef.current.send(
+        JSON.stringify({
+          type: "newUser",
+          userName,
+          roomId, // Make sure roomId is included here
+        })
+      );
     };
-
     wsRef.current.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      
-      switch (data.type) {
-        case 'roomState':
-          setHighestBid(data.highestBid);
-          setHighestBidder(data.highestBidder);
-          setTimeLeft(Math.floor(data.timeLeft / 1000));
-          setJoinedUsers(data.joinedUsers);
-          break;
+      if (data.type === "newBid" && data.roomId === roomId) {
+        setHighestBid(data.bidAmount);
+        setHighestBidder(data.userName);
+      } else if (data.type === "newUser") {
+        setJoinedUsers((prevUsers) => [...prevUsers, data.userName]);
+      }
+    };
+    wsRef.current.onclose = () => console.log("WebSocket connection closed");
 
-        case 'bidUpdate':
-          setHighestBid(data.bidAmount);
-          setHighestBidder(data.userName);
-          break;
+    return () => wsRef.current.close();
+  }, [roomId, userName]); // Adding userName here to ensure it's initialized
 
-        case 'timeSync':
-          const serverTime = new Date(data.serverTime);
-          const clientTime = new Date();
-          setServerTimeDiff(serverTime - clientTime);
-          setTimeLeft(Math.floor((new Date(data.endTime) - serverTime) / 1000));
-          break;
+  useEffect(() => {
+    const fetchAuctionData = async () => {
+      try {
+        // console.log(roomId);
+        if (!roomId) {
+          console.error("Room ID is not defined for API request!");
+          return;
+        }
+        
+        const response = await fetch(`http://localhost:8080/api/auction/auction-rooms/${roomId}`);
+        if (response.ok) {
+          const data = await response.json();
+          console.log(data);
+          setHighestBid(data.highestBid || 0);
+          setHighestBidder(data.highestBidder || "No bids yet");
+          setJoinedUsers(data.joinedUsers || []);
+          setTimeLeft(data.timelimit || 0);
+          setPassword(data.password || "");
+          setProduct(data.products[0] || null);
+        } else {
+          console.error("Failed to fetch auction data. Status:", response.status);
+        }
+      } catch (error) {
+        console.error("Error fetching auction data:", error);
       }
     };
 
-    return () => {
-      if (wsRef.current) {
-        wsRef.current.close();
-      }
-    };
-  }, [roomId, userName]);
+    fetchAuctionData();
+  }, [roomId]); // Ensure roomId is available before making the request
 
   useEffect(() => {
     if (timerRef.current) {
@@ -118,16 +121,34 @@ const Room = () => {
   const placeBid = async () => {
     const bidAmount = parseFloat(newBid);
     if (bidAmount > highestBid) {
-      wsRef.current.send(JSON.stringify({
-        type: 'newBid',
-        roomCode: roomId,
-        bidAmount,
-        userName
-      }));
-      setNewBid("");
+      try {
+        const response = await fetch(`http://localhost:8080/api/auction/auction-rooms/${roomId}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ highestBid: bidAmount, highestBidder: userName }),
+        });
+
+        if (response.ok) {
+          setHighestBid(bidAmount);
+          setHighestBidder(userName || "Anonymous");
+          wsRef.current.send(
+            JSON.stringify({
+              type: "newBid",
+              bidAmount,
+              userName,
+              roomId, // Send roomId with the bid
+            })
+          );
+        } else {
+          console.error("Failed to update bid on server.");
+        }
+      } catch (error) {
+        console.error("Error placing bid:", error);
+      }
     } else {
       alert("Bid must be higher than the current highest bid.");
     }
+    setNewBid("");
   };
 
   const endAuction = () => {

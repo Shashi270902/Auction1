@@ -13,7 +13,7 @@ const CreateAuctionRoom = () => {
     minbid_increment: 1,
     start_time: "",
     room_password: "",
-    selectedProducts: [],
+    selectedProducts: []
   });
 
   const [products, setProducts] = useState([]);
@@ -72,6 +72,7 @@ const CreateAuctionRoom = () => {
 
   const handleProductSelection = (e) => {
     const selectedOptions = Array.from(e.target.selectedOptions, option => option.value);
+    console.log(selectedOptions);
     setFormData(prev => ({
       ...prev,
       selectedProducts: selectedOptions
@@ -82,7 +83,7 @@ const CreateAuctionRoom = () => {
     e.preventDefault();
     setLoading(true);
 
-    console.log(formData, products);
+    console.log(formData);
 
     try {
       const response = await axios.post("http://localhost:8080/api/auction/create-room", {
@@ -240,14 +241,14 @@ const CreateAuctionRoom = () => {
           </div>
 
           {/* Add Product Section */}
-          <div className={styles.product_input_container}>
+          {/* <div className={styles.product_input_container}>
             <button type="button" className={styles.add_product_btn} onClick={handleAddProduct}>
               Add Product
             </button>
-          </div>
+          </div> */}
 
           {/* Display Products with Remove Button */}
-          {products.length > 0 && (
+          {/* {products.length > 0 && (
             <div className={styles.product_list}>
               <h3>Added Products:</h3>
               <ul>
@@ -264,7 +265,7 @@ const CreateAuctionRoom = () => {
                 ))}
               </ul>
             </div>
-          )}
+          )} */}
 
           {/* Select Products */}
           <div className={styles.input_group}>
