@@ -21,6 +21,10 @@ const auctionRoomSchema = new mongoose.Schema({
         required: true,
         default: 1800, 
     },
+    endTime: {
+        type: Date,
+        required: true,
+    },
     minbid_increment: {
         type: Number,
         required: true,
@@ -59,6 +63,10 @@ const auctionRoomSchema = new mongoose.Schema({
     createdAt: {
         type: Date,
         default: Date.now,
+    },
+    auctionEnded: {
+        type: Boolean,
+        default: false
     },
 });
 
