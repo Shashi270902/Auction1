@@ -102,6 +102,42 @@
   color: #001f3f;
 }
 
+
+/* Container for the status and button */
+.statusButtonContainer {
+  display: flex;
+  justify-content: space-between; /* Space between status and button */
+  align-items: center; /* Aligns them vertically centered */
+  width: 100%; /* Ensure it takes up full width */
+  margin-top: 10px; /* Space between this and the previous section */
+}
+
+/* Style adjustments for the status and button if needed */
+.flashCardStatus {
+  font-size: 1rem;
+  font-weight: bold;
+  padding: 5px;
+  margin-right: 20px; /* Space between status and button */
+}
+
+/* Optional: Make sure the button looks good */
+button {
+  padding: 10px 10px;
+  height: 30px;
+  background-color: transparent;
+  border: 2px solid #4b2b8f;
+  color: #4b2b8f;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+button:hover {
+  background-color: #4b2b8f;
+  color: white;
+}
+
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .flashCard {
