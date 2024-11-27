@@ -259,4 +259,75 @@
   .join_btn:hover {
     background-color: #0056b3;
   }
-  
+
+
+/* Container for header and input fields */
+.header_container {
+  display: flex;
+  align-items: flex-start; /* Align elements to the left */
+  gap: 20px; /* Space between elements */
+  flex-wrap: wrap; /* Allows wrapping on smaller screens */
+  margin-bottom: 20px;
+  padding: 0 10px; /* Add padding for consistency */
+  justify-content: flex-start; /* Align content to the left */
+}
+
+/* Header styling */
+.header {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 10px;
+  margin-left: 10px;
+  white-space: nowrap; /* Prevents breaking into multiple lines */
+}
+
+/* Input field styling */
+/* Container for header and input fields */
+.header_container {
+  display: flex;
+  align-items: center; /* Vertically center the elements */
+  gap: 15px; /* Space between elements */
+  flex-wrap: wrap; /* Wraps to next line on smaller screens */
+  margin-bottom: 20px;
+  justify-content: center; /* Centers the content */
+}
+
+/* Header styling */
+.header {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #ffffff;
+  white-space: nowrap;
+  margin-right: 300px; /* Prevents the text from breaking into multiple lines */
+}
+
+/* Input field styling */
+.input_field {
+  padding: 10px;
+  width: 200px;
+  height: 30px; /* Adjust width for consistent size */
+  border: 2px solid #4e89a4;
+  border-radius: 8px;
+  font-size: 1rem;
+  outline: none;
+  margin-right: 2px;
+  transition: border-color 0.3s ease;
+}
+
+.input_field:focus {
+  border-color: #4b2b8f;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .header_container {
+    flex-direction: column; /* Stack elements on smaller screens */
+    align-items: stretch; /* Ensure inputs are full width */
+  }
+
+  .input_field {
+    width: 80%;
+    height: 50%; /* Full width on smaller screens */
+  }
+}
