@@ -121,9 +121,14 @@
 }
 
 /* Optional: Make sure the button looks good */
-button {
+/* Updated button styling */
+/* Join Button CSS */
+.joinButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 10px 10px;
-  height: 30px;
+  height: 20px;
   background-color: transparent;
   border: 2px solid #4b2b8f;
   color: #4b2b8f;
@@ -132,10 +137,12 @@ button {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-button:hover {
+.joinButton:hover {
   background-color: #4b2b8f;
   color: white;
 }
+
+
 
 
 /* Responsive Design */
